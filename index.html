@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>8 Puzzle</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="puzzle.css" />
+  </head>
+  <body>
+    <div id="first">
+      <div>
+        <h1>8 Puzzle Game</h1>
+      </div>
+      <div>
+        <div class="contents">
+          <p id="slider-1">
+            by
+            <span>Toymammedov Nyyazmammet</span>
+          </p>
+          <p id="slider-2">Enjoy!</p>
+          <p id="slider-3">
+            Web Technologies Project
+            <span>Fall 2022</span>
+          </p>
+        </div>
+      </div>
+      <div class="start">
+        <button onclick="myFunction()">START</button>
+      </div>
+    </div>
+    <div id="second">
+      <h1>Pick an Image</h1>
+      <div class="images">
+        <button data-img="img1">
+          <img
+            onclick="imagesDisplay()"
+            id="img1"
+            src="1.jpeg"
+            alt=""
+            width="150px"
+          />
+        </button>
+        <button data-img="img2">
+          <img
+            onclick="imagesDisplay2()"
+            id="img2"
+            src="2.jpeg"
+            alt=""
+            width="150px"
+          />
+        </button>
+        <button data-img="img3">
+          <img
+            onclick="imagesDisplay3()"
+            id="img3"
+            src="3.jpeg"
+            alt=""
+            width="150px"
+          />
+        </button>
+      </div>
+      <div id="continue" onclick="thirdPart()">
+        <button>Continue</button>
+      </div>
+    </div>
+    <div id="third">
+      <div id="giraffe-img">
+        <ul>
+          <li id="empty" style="border: none"></li>
+          <li
+            id="first-img"
+            style="background: url('1.jpeg') -150px 0px no-repeat; opacity: 1"
+          ></li>
+          <li
+            id="second-img"
+            style="background: url('1.jpeg') -300px 0px no-repeat; opacity: 1"
+          ></li>
+          <li
+            id="third-img"
+            style="background: url('1.jpeg') 0px -150px no-repeat; opacity: 1"
+          ></li>
+          <li
+            id="fourth-img"
+            style="
+              background: url('1.jpeg') -150px -150px no-repeat;
+              opacity: 1;
+            "
+          ></li>
+          <li
+            id="fifth-img"
+            style="
+              background: url('1.jpeg') -300px -150px no-repeat;
+              opacity: 1;
+            "
+          ></li>
+          <li
+            id="sixth-img"
+            style="background: url('1.jpeg') 0px -300px no-repeat; opacity: 1"
+          ></li>
+          <li
+            id="seventh-img"
+            style="
+              background: url('1.jpeg') -150px -300px no-repeat;
+              opacity: 1;
+            "
+          ></li>
+          <li
+            id="eighth-img"
+            style="
+              background: url('1.jpeg') -300px -300px no-repeat;
+              opacity: 1;
+            "
+          ></li>
+        </ul>
+      </div>
+      <div id="man-mountain">
+        <ul>
+          <li id="empty" style="border: none"></li>
+          <li
+            id="first-img"
+            style="background: url('2.jpeg') -150px 0px no-repeat; opacity: 1"
+          ></li>
+          <li
+            id="second-img"
+            style="background: url('2.jpeg') -300px 0px no-repeat; opacity: 1"
+          ></li>
+          <li
+            id="third-img"
+            style="background: url('2.jpeg') 0px -150px no-repeat; opacity: 1"
+          ></li>
+          <li
+            id="fourth-img"
+            style="
+              background: url('2.jpeg') -150px -150px no-repeat;
+              opacity: 1;
+            "
+          ></li>
+          <li
+            id="fifth-img"
+            style="
+              background: url('2.jpeg') -300px -150px no-repeat;
+              opacity: 1;
+            "
+          ></li>
+          <li
+            id="sixth-img"
+            style="background: url('2.jpeg') 0px -300px no-repeat; opacity: 1"
+          ></li>
+          <li
+            id="seventh-img"
+            style="
+              background: url('2.jpeg') -150px -300px no-repeat;
+              opacity: 1;
+            "
+          ></li>
+          <li
+            id="eighth-img"
+            style="
+              background: url('2.jpeg') -300px -300px no-repeat;
+              opacity: 1;
+            "
+          ></li>
+        </ul>
+      </div>
+      <div id="cube">
+        <ul>
+          <li id="empty" style="border: none"></li>
+          <li
+            id="first-img"
+            style="background: url('3.jpeg') -150px 0px no-repeat; opacity: 1"
+          ></li>
+          <li
+            id="second-img"
+            style="background: url('3.jpeg') -300px 0px no-repeat; opacity: 1"
+          ></li>
+          <li
+            id="third-img"
+            style="background: url('3.jpeg') 0px -150px no-repeat; opacity: 1"
+          ></li>
+          <li
+            id="fourth-img"
+            style="
+              background: url('3.jpeg') -150px -150px no-repeat;
+              opacity: 1;
+            "
+          ></li>
+          <li
+            id="fifth-img"
+            style="
+              background: url('3.jpeg') -300px -150px no-repeat;
+              opacity: 1;
+            "
+          ></li>
+          <li
+            id="sixth-img"
+            style="background: url('3.jpeg') 0px -300px no-repeat; opacity: 1"
+          ></li>
+          <li
+            id="seventh-img"
+            style="
+              background: url('3.jpeg') -150px -300px no-repeat;
+              opacity: 1;
+            "
+          ></li>
+          <li
+            id="eighth-img"
+            style="
+              background: url('3.jpeg') -300px -300px no-repeat;
+              opacity: 1;
+            "
+          ></li>
+        </ul>
+      </div>
+      <div id="shuffle">
+        <p>Select Shuffle Amount</p>
+        <button onclick="showMoves()" id="choose">
+          <p id="chooseShuffle">Choose shuffle</p>
+          <span id="threeSpan">3 moves</span>
+          <span id="thirtySpan">30 moves</span>
+        </button>
+        <div id="moves">
+          <button id="untouchable">Choose shuffle</button>
+          <button id="three" onclick="threeMoves()">3 moves</button>
+          <button id="thirty" onclick="thirtyMoves()">30 moves</button>
+        </div>
+        <div class="start">
+          <button id="start-game">START</button>
+        </div>
+      </div>
+    </div>
+    <script src="puzzle.js"></script>
+  </body>
+</html>
