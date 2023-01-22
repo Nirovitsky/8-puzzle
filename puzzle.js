@@ -182,35 +182,133 @@ function thirtyMoves() {
 }
 
 /* game */
-let temp;
 let empty = document.getElementById("empty");
 let game = [...document.getElementsByTagName("li")];
-let arr = [];
-
-for (let item of game) {
-  item.addEventListener("click", oneDimensional, swapElements);
+let chunk = 3;
+let giraffeId = document.getElementById("giraffeId");
+let tiles = giraffeId.children;
+/* divide "game" array */
+let secondArray = game.slice(9, 18);
+let secondArrayTwoD = [];
+for (let i = 0; i < secondArray.length; i += chunk) {
+  secondArrayTwoD.push(secondArray.slice(i, i + chunk));
+}
+let thirdArray = game.slice(18, 27);
+let thirdArrayTwoD = [];
+for (let i = 0; i < thirdArray.length; i += chunk) {
+  thirdArrayTwoD.push(thirdArray.slice(i, i + chunk));
 }
 
-function oneDimensional(j) {
-  for (let i = 0; i < 9; i = i + j) {
-    arr.push(game[i]);
+let firstArrayTwoD = [];
+let counter = 0;
+for (let i = 0; i < chunk; i++) {
+  let subArr = [];
+  for (let j = 0; j < chunk; j++) {
+    subArr.push(tiles[counter++]);
+  }
+  firstArrayTwoD.push(subArr);
+}
+reset(firstArrayTwoD);
+
+const directions = [
+  [-1, 0],
+  [0, -1],
+  [1, 0],
+  [0, 1],
+];
+function getEmpty(i, j) {
+  for (let x = 0; x < directions.length; x++) {
+    const newI = i + directions[x][0];
+    const newJ = j + directions[x][1];
+    if (
+      newI >= 0 &&
+      newI < firstArrayTwoD.length &&
+      newJ >= 0 &&
+      newJ < firstArrayTwoD.length &&
+      firstArrayTwoD[newI][newJ] === empty
+    ) {
+      return [newI, newJ];
+    }
+  }
+  return [-1, -1];
+}
+function findEl(id) {
+  for (let i = 0; i < firstArrayTwoD.length; i++) {
+    for (let j = 0; j < firstArrayTwoD.length; j++) {
+      if (firstArrayTwoD[i][j].innerHTML === id) return [i, j];
+    }
   }
 }
-oneDimensional(1);
+function moveTile(id) {
+  let [i, j] = findEl(id);
+  if (firstArrayTwoD[i][j] === empty) {
+    return null;
+  }
+  let [emptyI, emptyJ] = getEmpty(i, j);
+  if (emptyI === -1) {
+    return null;
+  }
+  swap(i, j, emptyI, emptyJ);
+  transform(firstArrayTwoD[emptyI][emptyJ], emptyJ * 155, emptyI * 155);
+  transform(firstArrayTwoD[i][j], j * 155, i * 155);
+}
 
-function swapElements() {
-  console.log(arr);
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] === empty) {
-      console.log(true);
-      // temp = arr[i];
-      // arr[i] = arr[i + 1];
-      // arr[i + 1] = temp;
-      [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
-      console.log(arr);
-      break;
+function swap(i, j, newI, newJ) {
+  let temp = firstArrayTwoD[newI][newJ];
+  firstArrayTwoD[newI][newJ] = firstArrayTwoD[i][j];
+  firstArrayTwoD[i][j] = temp;
+}
+
+function transform(el, x, y) {
+  el.style.transform = `translate(${x}px, ${y}px)`;
+  el.style.transition = "0.5s";
+}
+
+function reset(arr) {
+  let counter = 0;
+  for (let i = 0; i < chunk; i++) {
+    for (let j = 0; j < chunk; j++) {
+      arr[i][j].style.top = "-15px";
+      arr[i][j].style.left = "0px";
+      transform(arr[i][j], j * 155, i * 155);
+      arr[i][j].innerHTML = counter++;
+    }
+  }
+}
+function shuffle() {
+  for (let i = 0; i < 3; i++) {
+    let randomTile = Math.floor(Math.random() * (chunk * chunk - 1)) + 1;
+    moveTile(randomTile);
+  }
+}
+
+let start = document.getElementById("start-game");
+start.addEventListener("click", function () {
+  shuffle();
+  let displayShuffle = document.getElementById("shuffle");
+  // displayShuffle.style.display = "none";
+});
+
+function shuffle() {
+  for (let i = 0; i < 3; i++) {
+    let randomI = Math.floor(Math.random());
+    let randomJ = Math.floor(Math.random());
+    let [emptyI, emptyJ] = getEmpty(randomI, randomJ);
+    if (emptyI !== -1) {
+      swap(randomI, randomJ, emptyI, emptyJ);
+      transform(firstArrayTwoD[emptyI][emptyJ], emptyJ * 155, emptyI * 155);
+      transform(firstArrayTwoD[randomI][randomJ], randomJ * 155, randomI * 155);
     }
   }
 }
 
-swapElements();
+function listenClicks() {
+  for (let i = 0; i < firstArrayTwoD.length; i++) {
+    for (let j = 0; j < firstArrayTwoD.length; j++)
+      firstArrayTwoD[i][j].addEventListener("click", (e) => {
+        const id = e.target.innerHTML;
+        moveTile(id);
+      });
+  }
+}
+listenClicks();
