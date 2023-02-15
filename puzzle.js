@@ -379,7 +379,7 @@ function shuffleThirty() {
     if (swaps === 30) {
       clearInterval(intervalId);
     }
-  }, 200);
+  }, 100);
 }
 
 function listenClicks() {
