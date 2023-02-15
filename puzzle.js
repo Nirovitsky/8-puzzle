@@ -157,6 +157,7 @@ function threeMoves() {
   if (window.getComputedStyle(moves).display !== "none") {
     moves.style.display = "none";
   }
+  shuffleCount = 3;
 }
 function thirtyMoves() {
   var start = document.getElementById("start-game");
@@ -179,6 +180,7 @@ function thirtyMoves() {
   if (window.getComputedStyle(moves).display !== "none") {
     moves.style.display = "none";
   }
+  shuffleCount = 30;
 }
 
 /* game */
@@ -261,7 +263,7 @@ function swap(i, j, newI, newJ) {
 
 function transform(el, x, y) {
   el.style.transform = `translate(${x}px, ${y}px)`;
-  el.style.transition = "0.5s";
+  el.style.transition = "transform 0.5s";
 }
 
 function reset(arr) {
@@ -275,31 +277,105 @@ function reset(arr) {
     }
   }
 }
-function shuffle() {
-  for (let i = 0; i < 3; i++) {
-    let randomTile = Math.floor(Math.random() * (chunk * chunk - 1)) + 1;
-    moveTile(randomTile);
-  }
-}
-
+let threeSpan = document.getElementById("threeSpan");
+let thirtySpan = document.getElementById("thirtySpan");
 let start = document.getElementById("start-game");
-start.addEventListener("click", function () {
-  shuffle();
-  let displayShuffle = document.getElementById("shuffle");
-  // displayShuffle.style.display = "none";
+
+let shuffleCount = 3;
+
+threeSpan.addEventListener("click", function () {
+  shuffleCount = 3;
 });
 
-function shuffle() {
-  for (let i = 0; i < 3; i++) {
-    let randomI = Math.floor(Math.random());
-    let randomJ = Math.floor(Math.random());
-    let [emptyI, emptyJ] = getEmpty(randomI, randomJ);
-    if (emptyI !== -1) {
-      swap(randomI, randomJ, emptyI, emptyJ);
-      transform(firstArrayTwoD[emptyI][emptyJ], emptyJ * 155, emptyI * 155);
-      transform(firstArrayTwoD[randomI][randomJ], randomJ * 155, randomI * 155);
+thirtySpan.addEventListener("click", function () {
+  console.log(shuffleCount);
+  shuffleCount = 30;
+  console.log(shuffleCount);
+});
+
+start.addEventListener("click", function () {
+  if (shuffleCount === 3) {
+    shuffleThree();
+  } else if (shuffleCount === 30) {
+    shuffleThirty();
+  }
+});
+
+let usedTiles = new Set();
+function shuffleThree() {
+  let emptyI, emptyJ;
+  for (let i = 0; i < firstArrayTwoD.length; i++) {
+    for (let j = 0; j < firstArrayTwoD[i].length; j++) {
+      if (firstArrayTwoD[i][j] === empty) {
+        emptyI = i;
+        emptyJ = j;
+        break;
+      }
     }
   }
+  usedTiles.clear();
+  let swaps = 0;
+  let intervalId = setInterval(function () {
+    let randomDirection = directions[Math.floor(Math.random() * 4)];
+    let newI = emptyI + randomDirection[0];
+    let newJ = emptyJ + randomDirection[1];
+    if (
+      newI >= 0 &&
+      newI < firstArrayTwoD.length &&
+      newJ >= 0 &&
+      newJ < firstArrayTwoD[newI].length
+    ) {
+      let randomTile = firstArrayTwoD[newI][newJ];
+      if (!usedTiles.has(randomTile)) {
+        swap(emptyI, emptyJ, newI, newJ);
+        transform(randomTile, emptyJ * 155, emptyI * 155);
+        emptyI = newI;
+        emptyJ = newJ;
+        usedTiles.add(randomTile);
+        swaps++;
+      }
+    }
+    if (swaps === 3) {
+      clearInterval(intervalId);
+    }
+  }, 400);
+}
+
+function shuffleThirty() {
+  let emptyI, emptyJ;
+  for (let i = 0; i < firstArrayTwoD.length; i++) {
+    for (let j = 0; j < firstArrayTwoD[i].length; j++) {
+      if (firstArrayTwoD[i][j] === empty) {
+        emptyI = i;
+        emptyJ = j;
+        break;
+      }
+    }
+  }
+  usedTiles.clear();
+  let swaps = 0;
+  let intervalId = setInterval(function () {
+    let randomDirection = directions[Math.floor(Math.random() * 4)];
+    let newI = emptyI + randomDirection[0];
+    let newJ = emptyJ + randomDirection[1];
+    let randomTile = firstArrayTwoD[newI][newJ];
+    if (
+      newI >= 0 &&
+      newI < firstArrayTwoD.length &&
+      newJ >= 0 &&
+      newJ < firstArrayTwoD[newI].length
+    ) {
+      usedTiles.add(randomTile);
+      swap(emptyI, emptyJ, newI, newJ);
+      transform(randomTile, emptyJ * 155, emptyI * 155);
+      emptyI = newI;
+      emptyJ = newJ;
+      swaps++;
+    }
+    if (swaps === 30) {
+      clearInterval(intervalId);
+    }
+  }, 200);
 }
 
 function listenClicks() {
