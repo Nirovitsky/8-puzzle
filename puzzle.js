@@ -340,7 +340,7 @@ function shuffleThree() {
     }
   }, 400);
 }
-
+let lastSwappedTile;
 function shuffleThirty() {
   let emptyI, emptyJ;
   for (let i = 0; i < firstArrayTwoD.length; i++) {
@@ -358,19 +358,23 @@ function shuffleThirty() {
     let randomDirection = directions[Math.floor(Math.random() * 4)];
     let newI = emptyI + randomDirection[0];
     let newJ = emptyJ + randomDirection[1];
-    let randomTile = firstArrayTwoD[newI][newJ];
     if (
       newI >= 0 &&
       newI < firstArrayTwoD.length &&
       newJ >= 0 &&
       newJ < firstArrayTwoD[newI].length
     ) {
-      usedTiles.add(randomTile);
-      swap(emptyI, emptyJ, newI, newJ);
-      transform(randomTile, emptyJ * 155, emptyI * 155);
-      emptyI = newI;
-      emptyJ = newJ;
-      swaps++;
+      let randomTile = firstArrayTwoD[newI][newJ];
+      if (randomTile !== lastSwappedTile) {
+        swap(emptyI, emptyJ, newI, newJ);
+        transform(randomTile, emptyJ * 155, emptyI * 155);
+        emptyI = newI;
+        emptyJ = newJ;
+        usedTiles.clear();
+        usedTiles.add(randomTile);
+        lastSwappedTile = randomTile;
+        swaps++;
+      }
     }
     if (swaps === 30) {
       clearInterval(intervalId);
