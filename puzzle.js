@@ -211,6 +211,11 @@ for (let i = 0; i < chunk; i++) {
   firstArrayTwoD.push(subArr);
 }
 reset(firstArrayTwoD);
+let compareArray = game.slice(0, 9);
+let compareArrayTwoDimensional = [];
+for (let i = 0; i < compareArray.length; i += chunk) {
+  compareArrayTwoDimensional.push(compareArray.slice(i, i + chunk));
+}
 
 const directions = [
   [-1, 0],
@@ -259,6 +264,26 @@ function swap(i, j, newI, newJ) {
   let temp = firstArrayTwoD[newI][newJ];
   firstArrayTwoD[newI][newJ] = firstArrayTwoD[i][j];
   firstArrayTwoD[i][j] = temp;
+  youWon();
+}
+
+function youWon() {
+  if (firstArrayTwoD.length !== compareArrayTwoDimensional.length) {
+    return false;
+  }
+  for (let i = 0; i < firstArrayTwoD.length; i++) {
+    for (let j = 0; j < firstArrayTwoD[i].length; j++) {
+      if (firstArrayTwoD[i][j] !== compareArrayTwoDimensional[i][j]) {
+        return false;
+      }
+    }
+    document.addEventListener("keydown", function (event) {
+      if (event.keyCode === 116) {
+        shuffleDiv.style.display = "flex";
+      }
+    });
+    console.log("you won");
+  }
 }
 
 function transform(el, x, y) {
@@ -280,6 +305,7 @@ function reset(arr) {
 let threeSpan = document.getElementById("threeSpan");
 let thirtySpan = document.getElementById("thirtySpan");
 let start = document.getElementById("start-game");
+let shuffleDiv = document.getElementById("shuffle");
 
 let shuffleCount = 3;
 
@@ -288,16 +314,16 @@ threeSpan.addEventListener("click", function () {
 });
 
 thirtySpan.addEventListener("click", function () {
-  console.log(shuffleCount);
   shuffleCount = 30;
-  console.log(shuffleCount);
 });
 
 start.addEventListener("click", function () {
   if (shuffleCount === 3) {
     shuffleThree();
+    shuffleDiv.style.display = "none";
   } else if (shuffleCount === 30) {
     shuffleThirty();
+    shuffleDiv.style.display = "none";
   }
 });
 
@@ -338,7 +364,7 @@ function shuffleThree() {
     if (swaps === 3) {
       clearInterval(intervalId);
     }
-  }, 400);
+  }, 500);
 }
 let lastSwappedTile;
 function shuffleThirty() {
@@ -379,7 +405,7 @@ function shuffleThirty() {
     if (swaps === 30) {
       clearInterval(intervalId);
     }
-  }, 100);
+  }, 200);
 }
 
 function listenClicks() {
