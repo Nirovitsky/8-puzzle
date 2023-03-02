@@ -122,6 +122,7 @@ li {
 #third {
   display: none; /*needs to be flex*/
   flex-direction: column;
+  margin-top: 60px;
 }
 #giraffe-img li {
   list-style-type: none;
@@ -336,4 +337,20 @@ li {
   position: absolute;
   top: 295px;
   left: 312px;
+}
+#solve-puzzle {
+  font-size: 38px;
+  display: none;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 50px;
+  color: grey;
+}
+#completed {
+  font-size: 30px;
+  display: none;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 35px;
+  color: grey;
 }

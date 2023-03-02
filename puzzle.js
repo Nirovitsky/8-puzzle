@@ -280,9 +280,13 @@ function youWon() {
     document.addEventListener("keydown", function (event) {
       if (event.keyCode === 116) {
         shuffleDiv.style.display = "flex";
+        completed.style.display = "none";
       }
     });
-    console.log("you won");
+    let solvePuzzle = document.getElementById("solve-puzzle");
+    let completed = document.getElementById("completed");
+    completed.style.display = "flex";
+    solvePuzzle.style.display = "none";
   }
 }
 
@@ -321,9 +325,13 @@ start.addEventListener("click", function () {
   if (shuffleCount === 3) {
     shuffleThree();
     shuffleDiv.style.display = "none";
+    let solvePuzzle = document.getElementById("solve-puzzle");
+    solvePuzzle.style.display = "flex";
   } else if (shuffleCount === 30) {
     shuffleThirty();
     shuffleDiv.style.display = "none";
+    let solvePuzzle = document.getElementById("solve-puzzle");
+    solvePuzzle.style.display = "flex";
   }
 });
 
