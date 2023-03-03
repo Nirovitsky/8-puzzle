@@ -122,7 +122,7 @@ li {
 #third {
   display: none; /*needs to be flex*/
   flex-direction: column;
-  margin-top: 60px;
+  margin-top: 45px;
 }
 #giraffe-img li {
   list-style-type: none;
