@@ -406,24 +406,32 @@ function shuffleThirty() {
   }, 200);
 }
 
-function youWon() {
-  if (firstArrayTwoD.length !== compareArrayTwoDimensional.length) {
-    return false;
-  }
-  for (let i = 0; i < firstArrayTwoD.length; i++) {
-    for (let j = 0; j < firstArrayTwoD[i].length; j++) {
-      if (firstArrayTwoD[i][j] !== compareArrayTwoDimensional[i][j]) {
-        // let borderColorFalse = document.querySelector("#giraffe-img li");
-        // [].slice.call(borderColorFalse, function (ele) {
-        //   borderColorFalse.style.borderColor = "red";
-        // });
-        // console.log(borderColorFalse);
-        return false;
-      }
+function updateTileColors() {
+  const tiles = document.querySelectorAll("#giraffe-img li");
+  for (let i = 0; i < tiles.length; i++) {
+    const tile = tiles[i];
+    const row = Math.floor(i / 3);
+    const col = i % 3;
+    if (firstArrayTwoD[row][col] === compareArrayTwoDimensional[row][col]) {
+      tile.style.borderColor = "green";
+    } else {
+      tile.style.borderColor = "red";
     }
   }
-  // let borderColorFalse = document.querySelector("#giraffe-img li");
-  // borderColorFalse.style.borderColor = "green";
+}
+
+function youWon() {
+  const correct = firstArrayTwoD.every((row, i) => {
+    return row.every((val, j) => {
+      return val === compareArrayTwoDimensional[i][j];
+    });
+  });
+
+  if (!correct) {
+    updateTileColors();
+    return false;
+  }
+
   document.addEventListener("keydown", function (event) {
     if (event.keyCode === 116) {
       localStorage.setItem("pageReloaded", true);
@@ -432,24 +440,17 @@ function youWon() {
       window.location.reload(true);
     }
   });
+
   let solvePuzzle = document.getElementById("solve-puzzle");
   let completed = document.getElementById("completed");
   completed.style.display = "flex";
   solvePuzzle.style.display = "none";
   document.getElementById("giraffe-img").style.backgroundColor =
-    "rgb(213 213 213)";
-}
+    "rgb(213, 213, 213)";
 
-window.addEventListener("load", function () {
-  let pageReloaded = localStorage.getItem("pageReloaded");
-  if (pageReloaded) {
-    let firstPage = document.getElementById("first");
-    let secondPage = document.getElementById("second");
-    secondPage.style.display = "flex";
-    firstPage.style.display = "none";
-    localStorage.removeItem("pageReloaded");
-  }
-});
+  updateTileColors();
+  return true;
+}
 
 function listenClicks() {
   for (let i = 0; i < firstArrayTwoD.length; i++) {
