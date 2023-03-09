@@ -341,6 +341,7 @@ li {
 #solve-puzzle {
   font-size: 38px;
   display: none;
+  font-weight: 500;
   flex-direction: column;
   text-align: center;
   margin-top: 50px;
@@ -348,9 +349,42 @@ li {
 }
 #completed {
   font-size: 30px;
+  font-weight: 800;
   display: none;
   flex-direction: column;
   text-align: center;
   margin-top: 35px;
-  color: grey;
+  color: rgb(23, 22, 22);
+}
+.rotate-scale-up-hor {
+  -webkit-animation: rotate-scale-up-hor 0.65s linear both;
+  animation: rotate-scale-up-hor 0.65s linear both;
+}
+@-webkit-keyframes rotate-scale-up-hor {
+  0% {
+    -webkit-transform: scale(1) rotateX(0);
+    transform: scale(1) rotateX(0);
+  }
+  50% {
+    -webkit-transform: scale(2) rotateX(-180deg);
+    transform: scale(2) rotateX(-180deg);
+  }
+  100% {
+    -webkit-transform: scale(1) rotateX(-360deg);
+    transform: scale(1) rotateX(-360deg);
+  }
+}
+@keyframes rotate-scale-up-hor {
+  0% {
+    -webkit-transform: scale(1) rotateX(0);
+    transform: scale(1) rotateX(0);
+  }
+  50% {
+    -webkit-transform: scale(2) rotateX(-180deg);
+    transform: scale(2) rotateX(-180deg);
+  }
+  100% {
+    -webkit-transform: scale(1) rotateX(-360deg);
+    transform: scale(1) rotateX(-360deg);
+  }
 }

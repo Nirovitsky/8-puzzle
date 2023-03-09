@@ -29,8 +29,8 @@
     </div>
     <div id="second">
       <h1>Pick an Image</h1>
-      <div class="images">
-        <button data-img="img1">
+      <div class="images" id="images">
+        <button data-img="img1" class="image">
           <img
             onclick="imagesDisplay()"
             id="img1"
@@ -39,7 +39,7 @@
             width="150px"
           />
         </button>
-        <button data-img="img2">
+        <button data-img="img2" class="image">
           <img
             onclick="imagesDisplay2()"
             id="img2"
@@ -48,7 +48,7 @@
             width="150px"
           />
         </button>
-        <button data-img="img3">
+        <button data-img="img3" class="image">
           <img
             onclick="imagesDisplay3()"
             id="img3"
@@ -65,7 +65,7 @@
     <div id="third">
       <div id="giraffe-img">
         <ul id="giraffeId">
-          <li id="empty" style="border: none; color: whitesmoke"></li>
+          <li id="empty" style="border: none; color: transparent"></li>
           <li
             id="first-img"
             style="background: url('1.jpeg') -150px 0px no-repeat; opacity: 1"
@@ -114,7 +114,7 @@
       </div>
       <div id="man-mountain">
         <ul>
-          <li id="empty" style="border: none; color: whitesmoke"></li>
+          <li id="empty" style="border: none; color: transparent"></li>
           <li
             id="first-img"
             style="background: url('2.jpeg') -150px 0px no-repeat; opacity: 1"
@@ -163,7 +163,7 @@
       </div>
       <div id="cube">
         <ul>
-          <li id="empty" style="border: none; color: whitesmoke"></li>
+          <li id="empty" style="border: none; color: transparent"></li>
           <li
             id="first-img"
             style="background: url('3.jpeg') -150px 0px no-repeat; opacity: 1"
@@ -228,8 +228,9 @@
         </div>
       </div>
       <div id="solve-puzzle">Solve the puzzle now!</div>
-      <div id="completed">
-        Congratulations you won! Press F5 to restart the game
+      <div id="completed" class="rotate-scale-up-hor">
+        Congratulations you won!
+        <span> Press F5 to restart the game </span>
       </div>
     </div>
     <script src="puzzle.js"></script>

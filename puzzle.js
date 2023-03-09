@@ -189,6 +189,7 @@ let game = [...document.getElementsByTagName("li")];
 let chunk = 3;
 let giraffeId = document.getElementById("giraffeId");
 let tiles = giraffeId.children;
+
 /* divide "game" array */
 let secondArray = game.slice(9, 18);
 let secondArrayTwoD = [];
@@ -201,7 +202,15 @@ for (let i = 0; i < thirdArray.length; i += chunk) {
   thirdArrayTwoD.push(thirdArray.slice(i, i + chunk));
 }
 
+let imagesParent = document.getElementById("images");
+imagesParent.addEventListener("click", (e) => {
+  var nodes = document.querySelectorAll("#images > .image");
+  console.log([].indexOf.call(nodes, e.target));
+});
+
 let firstArrayTwoD = [];
+let imagesLists = [firstArrayTwoD, secondArrayTwoD, thirdArrayTwoD];
+
 let counter = 0;
 for (let i = 0; i < chunk; i++) {
   let subArr = [];
@@ -267,29 +276,6 @@ function swap(i, j, newI, newJ) {
   youWon();
 }
 
-function youWon() {
-  if (firstArrayTwoD.length !== compareArrayTwoDimensional.length) {
-    return false;
-  }
-  for (let i = 0; i < firstArrayTwoD.length; i++) {
-    for (let j = 0; j < firstArrayTwoD[i].length; j++) {
-      if (firstArrayTwoD[i][j] !== compareArrayTwoDimensional[i][j]) {
-        return false;
-      }
-    }
-    document.addEventListener("keydown", function (event) {
-      if (event.keyCode === 116) {
-        shuffleDiv.style.display = "flex";
-        completed.style.display = "none";
-      }
-    });
-    let solvePuzzle = document.getElementById("solve-puzzle");
-    let completed = document.getElementById("completed");
-    completed.style.display = "flex";
-    solvePuzzle.style.display = "none";
-  }
-}
-
 function transform(el, x, y) {
   el.style.transform = `translate(${x}px, ${y}px)`;
   el.style.transition = "transform 0.5s";
@@ -310,30 +296,34 @@ let threeSpan = document.getElementById("threeSpan");
 let thirtySpan = document.getElementById("thirtySpan");
 let start = document.getElementById("start-game");
 let shuffleDiv = document.getElementById("shuffle");
-
 let shuffleCount = 3;
 
-threeSpan.addEventListener("click", function () {
-  shuffleCount = 3;
-});
+function startGame() {
+  threeSpan.addEventListener("click", function () {
+    shuffleCount = 3;
+  });
 
-thirtySpan.addEventListener("click", function () {
-  shuffleCount = 30;
-});
+  thirtySpan.addEventListener("click", function () {
+    shuffleCount = 30;
+  });
 
-start.addEventListener("click", function () {
-  if (shuffleCount === 3) {
-    shuffleThree();
-    shuffleDiv.style.display = "none";
-    let solvePuzzle = document.getElementById("solve-puzzle");
-    solvePuzzle.style.display = "flex";
-  } else if (shuffleCount === 30) {
-    shuffleThirty();
-    shuffleDiv.style.display = "none";
-    let solvePuzzle = document.getElementById("solve-puzzle");
-    solvePuzzle.style.display = "flex";
-  }
-});
+  start.addEventListener("click", function () {
+    if (shuffleCount === 3) {
+      shuffleThree();
+      listenClicks();
+      shuffleDiv.style.display = "none";
+      let solvePuzzle = document.getElementById("solve-puzzle");
+      solvePuzzle.style.display = "flex";
+    } else if (shuffleCount === 30) {
+      shuffleThirty();
+      listenClicks();
+      shuffleDiv.style.display = "none";
+      let solvePuzzle = document.getElementById("solve-puzzle");
+      solvePuzzle.style.display = "flex";
+    }
+  });
+}
+startGame();
 
 let usedTiles = new Set();
 function shuffleThree() {
@@ -416,6 +406,51 @@ function shuffleThirty() {
   }, 200);
 }
 
+function youWon() {
+  if (firstArrayTwoD.length !== compareArrayTwoDimensional.length) {
+    return false;
+  }
+  for (let i = 0; i < firstArrayTwoD.length; i++) {
+    for (let j = 0; j < firstArrayTwoD[i].length; j++) {
+      if (firstArrayTwoD[i][j] !== compareArrayTwoDimensional[i][j]) {
+        let borderColorFalse = document.getElementById("#giraffe-img li");
+        [].slice.call(borderColorFalse, function (ele) {
+          ele.style.borderColor = "red";
+          console.log(borderColorFalse);
+        });
+        return false;
+      }
+    }
+  }
+  let borderColorFalse = document.querySelector("#giraffe-img li");
+  borderColorFalse.style.borderColor = "green";
+  document.addEventListener("keydown", function (event) {
+    if (event.keyCode === 116) {
+      localStorage.setItem("pageReloaded", true);
+      let firstPage = document.getElementById("first");
+      firstPage.style.display = "none";
+      window.location.reload(true);
+    }
+  });
+  let solvePuzzle = document.getElementById("solve-puzzle");
+  let completed = document.getElementById("completed");
+  completed.style.display = "flex";
+  solvePuzzle.style.display = "none";
+  document.getElementById("giraffe-img").style.backgroundColor =
+    "rgb(213 213 213)";
+}
+
+window.addEventListener("load", function () {
+  let pageReloaded = localStorage.getItem("pageReloaded");
+  if (pageReloaded) {
+    let firstPage = document.getElementById("first");
+    let secondPage = document.getElementById("second");
+    secondPage.style.display = "flex";
+    firstPage.style.display = "none";
+    localStorage.removeItem("pageReloaded");
+  }
+});
+
 function listenClicks() {
   for (let i = 0; i < firstArrayTwoD.length; i++) {
     for (let j = 0; j < firstArrayTwoD.length; j++)
@@ -425,4 +460,3 @@ function listenClicks() {
       });
   }
 }
-listenClicks();
