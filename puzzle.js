@@ -413,11 +413,11 @@ function youWon() {
   for (let i = 0; i < firstArrayTwoD.length; i++) {
     for (let j = 0; j < firstArrayTwoD[i].length; j++) {
       if (firstArrayTwoD[i][j] !== compareArrayTwoDimensional[i][j]) {
-        let borderColorFalse = document.getElementById("#giraffe-img li");
+        let borderColorFalse = document.querySelector("#giraffe-img li");
         [].slice.call(borderColorFalse, function (ele) {
-          ele.style.borderColor = "red";
-          console.log(borderColorFalse);
+          borderColorFalse.style.borderColor = "red";
         });
+        console.log(borderColorFalse);
         return false;
       }
     }
