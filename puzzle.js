@@ -413,17 +413,17 @@ function youWon() {
   for (let i = 0; i < firstArrayTwoD.length; i++) {
     for (let j = 0; j < firstArrayTwoD[i].length; j++) {
       if (firstArrayTwoD[i][j] !== compareArrayTwoDimensional[i][j]) {
-        let borderColorFalse = document.querySelector("#giraffe-img li");
-        [].slice.call(borderColorFalse, function (ele) {
-          borderColorFalse.style.borderColor = "red";
-        });
-        console.log(borderColorFalse);
+        // let borderColorFalse = document.querySelector("#giraffe-img li");
+        // [].slice.call(borderColorFalse, function (ele) {
+        //   borderColorFalse.style.borderColor = "red";
+        // });
+        // console.log(borderColorFalse);
         return false;
       }
     }
   }
-  let borderColorFalse = document.querySelector("#giraffe-img li");
-  borderColorFalse.style.borderColor = "green";
+  // let borderColorFalse = document.querySelector("#giraffe-img li");
+  // borderColorFalse.style.borderColor = "green";
   document.addEventListener("keydown", function (event) {
     if (event.keyCode === 116) {
       localStorage.setItem("pageReloaded", true);
