@@ -1,3 +1,9 @@
+let threeSpan = document.getElementById("threeSpan");
+let thirtySpan = document.getElementById("thirtySpan");
+let start = document.getElementById("start-game");
+let shuffleDiv = document.getElementById("shuffle");
+let shuffleCount = 3;
+
 function slider() {
   var slide_1 = document.getElementById("slider-1");
   var slide_2 = document.getElementById("slider-2");
@@ -184,33 +190,12 @@ function thirtyMoves() {
 }
 
 /* game */
-let empty = document.getElementById("empty");
+let empty = document.getElementById("empty-first");
 let game = [...document.getElementsByTagName("li")];
 let chunk = 3;
 let giraffeId = document.getElementById("giraffeId");
 let tiles = giraffeId.children;
-
-/* divide "game" array */
-let secondArray = game.slice(9, 18);
-let secondArrayTwoD = [];
-for (let i = 0; i < secondArray.length; i += chunk) {
-  secondArrayTwoD.push(secondArray.slice(i, i + chunk));
-}
-let thirdArray = game.slice(18, 27);
-let thirdArrayTwoD = [];
-for (let i = 0; i < thirdArray.length; i += chunk) {
-  thirdArrayTwoD.push(thirdArray.slice(i, i + chunk));
-}
-
-let imagesParent = document.getElementById("images");
-imagesParent.addEventListener("click", (e) => {
-  var nodes = document.querySelectorAll("#images > .image");
-  console.log([].indexOf.call(nodes, e.target));
-});
-
 let firstArrayTwoD = [];
-let imagesLists = [firstArrayTwoD, secondArrayTwoD, thirdArrayTwoD];
-
 let counter = 0;
 for (let i = 0; i < chunk; i++) {
   let subArr = [];
@@ -292,11 +277,6 @@ function reset(arr) {
     }
   }
 }
-let threeSpan = document.getElementById("threeSpan");
-let thirtySpan = document.getElementById("thirtySpan");
-let start = document.getElementById("start-game");
-let shuffleDiv = document.getElementById("shuffle");
-let shuffleCount = 3;
 
 function startGame() {
   threeSpan.addEventListener("click", function () {
@@ -421,17 +401,18 @@ function updateTileColors() {
 }
 
 function youWon() {
-  const correct = firstArrayTwoD.every((row, i) => {
-    return row.every((val, j) => {
-      return val === compareArrayTwoDimensional[i][j];
-    });
-  });
-
-  if (!correct) {
-    updateTileColors();
+  if (firstArrayTwoD.length !== compareArrayTwoDimensional.length) {
     return false;
   }
-
+  for (let i = 0; i < firstArrayTwoD.length; i++) {
+    for (let j = 0; j < firstArrayTwoD[i].length; j++) {
+      if (firstArrayTwoD[i][j] !== compareArrayTwoDimensional[i][j]) {
+        updateTileColors();
+        return false;
+      }
+    }
+  }
+  updateTileColors();
   document.addEventListener("keydown", function (event) {
     if (event.keyCode === 116) {
       localStorage.setItem("pageReloaded", true);
@@ -440,17 +421,24 @@ function youWon() {
       window.location.reload(true);
     }
   });
-
   let solvePuzzle = document.getElementById("solve-puzzle");
   let completed = document.getElementById("completed");
   completed.style.display = "flex";
   solvePuzzle.style.display = "none";
   document.getElementById("giraffe-img").style.backgroundColor =
-    "rgb(213, 213, 213)";
-
-  updateTileColors();
-  return true;
+    "rgb(213 213 213)";
 }
+
+window.addEventListener("load", function () {
+  let pageReloaded = localStorage.getItem("pageReloaded");
+  if (pageReloaded) {
+    let firstPage = document.getElementById("first");
+    let secondPage = document.getElementById("second");
+    secondPage.style.display = "flex";
+    firstPage.style.display = "none";
+    localStorage.removeItem("pageReloaded");
+  }
+});
 
 function listenClicks() {
   for (let i = 0; i < firstArrayTwoD.length; i++) {
@@ -458,6 +446,513 @@ function listenClicks() {
       firstArrayTwoD[i][j].addEventListener("click", (e) => {
         const id = e.target.innerHTML;
         moveTile(id);
+      });
+  }
+}
+
+let secondArray = game.slice(9, 18);
+let secondArrayTwoD = [];
+for (let i = 0; i < secondArray.length; i += chunk) {
+  secondArrayTwoD.push(secondArray.slice(i, i + chunk));
+}
+let emptySecond = document.getElementById("empty-second");
+resetSecond(secondArrayTwoD);
+let compareArraySecond = game.slice(9, 18);
+let compareArrayTwoDimensionalSecond = [];
+for (let i = 0; i < compareArraySecond.length; i += chunk) {
+  compareArrayTwoDimensionalSecond.push(compareArraySecond.slice(i, i + chunk));
+}
+
+const directionsSecond = [
+  [-1, 0],
+  [0, -1],
+  [1, 0],
+  [0, 1],
+];
+function getEmptySecond(i, j) {
+  for (let x = 0; x < directionsSecond.length; x++) {
+    const newI = i + directionsSecond[x][0];
+    const newJ = j + directionsSecond[x][1];
+    if (
+      newI >= 0 &&
+      newI < secondArrayTwoD.length &&
+      newJ >= 0 &&
+      newJ < secondArrayTwoD.length &&
+      secondArrayTwoD[newI][newJ] === emptySecond
+    ) {
+      return [newI, newJ];
+    }
+  }
+  return [-1, -1];
+}
+function findElSecond(id) {
+  for (let i = 0; i < secondArrayTwoD.length; i++) {
+    for (let j = 0; j < secondArrayTwoD.length; j++) {
+      if (secondArrayTwoD[i][j].innerHTML === id) return [i, j];
+    }
+  }
+}
+function moveTileSecond(id) {
+  let [i, j] = findElSecond(id);
+  if (secondArrayTwoD[i][j] === emptySecond) {
+    return null;
+  }
+  let [emptyI, emptyJ] = getEmptySecond(i, j);
+  if (emptyI === -1) {
+    return null;
+  }
+  swapSecond(i, j, emptyI, emptyJ);
+  transformSecond(secondArrayTwoD[emptyI][emptyJ], emptyJ * 155, emptyI * 155);
+  transformSecond(secondArrayTwoD[i][j], j * 155, i * 155);
+}
+
+function swapSecond(i, j, newI, newJ) {
+  let temp = secondArrayTwoD[newI][newJ];
+  secondArrayTwoD[newI][newJ] = secondArrayTwoD[i][j];
+  secondArrayTwoD[i][j] = temp;
+  youWonSecond();
+}
+
+function transformSecond(el, x, y) {
+  el.style.transform = `translate(${x}px, ${y}px)`;
+  el.style.transition = "transform 0.5s";
+}
+
+function resetSecond(arr) {
+  let counter = 0;
+  for (let i = 0; i < chunk; i++) {
+    for (let j = 0; j < chunk; j++) {
+      arr[i][j].style.top = "-15px";
+      arr[i][j].style.left = "0px";
+      transformSecond(arr[i][j], j * 155, i * 155);
+      arr[i][j].innerHTML = counter++;
+    }
+  }
+}
+
+function startGameSecond() {
+  threeSpan.addEventListener("click", function () {
+    shuffleCount = 3;
+  });
+
+  thirtySpan.addEventListener("click", function () {
+    shuffleCount = 30;
+  });
+
+  start.addEventListener("click", function () {
+    if (shuffleCount === 3) {
+      shuffleThreeSecond();
+      listenClicksSecond();
+      shuffleDiv.style.display = "none";
+      let solvePuzzle = document.getElementById("solve-puzzle");
+      solvePuzzle.style.display = "flex";
+    } else if (shuffleCount === 30) {
+      shuffleThirtySecond();
+      listenClicksSecond();
+      shuffleDiv.style.display = "none";
+      let solvePuzzle = document.getElementById("solve-puzzle");
+      solvePuzzle.style.display = "flex";
+    }
+  });
+}
+startGameSecond();
+
+let usedTilesSecond = new Set();
+function shuffleThreeSecond() {
+  let emptyI, emptyJ;
+  for (let i = 0; i < secondArrayTwoD.length; i++) {
+    for (let j = 0; j < secondArrayTwoD[i].length; j++) {
+      if (secondArrayTwoD[i][j] === emptySecond) {
+        emptyI = i;
+        emptyJ = j;
+        break;
+      }
+    }
+  }
+  usedTilesSecond.clear();
+  let swaps = 0;
+  let intervalId = setInterval(function () {
+    let randomDirection = directions[Math.floor(Math.random() * 4)];
+    let newI = emptyI + randomDirection[0];
+    let newJ = emptyJ + randomDirection[1];
+    if (
+      newI >= 0 &&
+      newI < secondArrayTwoD.length &&
+      newJ >= 0 &&
+      newJ < secondArrayTwoD[newI].length
+    ) {
+      let randomTile = secondArrayTwoD[newI][newJ];
+      if (!usedTilesSecond.has(randomTile)) {
+        swapSecond(emptyI, emptyJ, newI, newJ);
+        transformSecond(randomTile, emptyJ * 155, emptyI * 155);
+        emptyI = newI;
+        emptyJ = newJ;
+        usedTilesSecond.add(randomTile);
+        swaps++;
+      }
+    }
+    if (swaps === 3) {
+      clearInterval(intervalId);
+    }
+  }, 500);
+}
+let lastSwappedTileSecond;
+function shuffleThirtySecond() {
+  let emptyI, emptyJ;
+  for (let i = 0; i < secondArrayTwoD.length; i++) {
+    for (let j = 0; j < secondArrayTwoD[i].length; j++) {
+      if (secondArrayTwoD[i][j] === emptySecond) {
+        emptyI = i;
+        emptyJ = j;
+        break;
+      }
+    }
+  }
+  usedTilesSecond.clear();
+  let swaps = 0;
+  let intervalId = setInterval(function () {
+    let randomDirection = directions[Math.floor(Math.random() * 4)];
+    let newI = emptyI + randomDirection[0];
+    let newJ = emptyJ + randomDirection[1];
+    if (
+      newI >= 0 &&
+      newI < secondArrayTwoD.length &&
+      newJ >= 0 &&
+      newJ < secondArrayTwoD[newI].length
+    ) {
+      let randomTile = secondArrayTwoD[newI][newJ];
+      if (randomTile !== lastSwappedTileSecond) {
+        swapSecond(emptyI, emptyJ, newI, newJ);
+        transformSecond(randomTile, emptyJ * 155, emptyI * 155);
+        emptyI = newI;
+        emptyJ = newJ;
+        usedTilesSecond.clear();
+        usedTilesSecond.add(randomTile);
+        lastSwappedTileSecond = randomTile;
+        swaps++;
+      }
+    }
+    if (swaps === 30) {
+      clearInterval(intervalId);
+    }
+  }, 200);
+}
+
+function updateTileColorSecond() {
+  const tiles = document.querySelectorAll("#man-mountain li");
+  for (let i = 0; i < tiles.length; i++) {
+    const tile = tiles[i];
+    const row = Math.floor(i / 3);
+    const col = i % 3;
+    if (
+      secondArrayTwoD[row][col] === compareArrayTwoDimensionalSecond[row][col]
+    ) {
+      tile.style.borderColor = "green";
+    } else {
+      tile.style.borderColor = "red";
+    }
+  }
+}
+
+function youWonSecond() {
+  if (secondArrayTwoD.length !== compareArrayTwoDimensionalSecond.length) {
+    return false;
+  }
+  for (let i = 0; i < secondArrayTwoD.length; i++) {
+    for (let j = 0; j < secondArrayTwoD[i].length; j++) {
+      if (secondArrayTwoD[i][j] !== compareArrayTwoDimensionalSecond[i][j]) {
+        updateTileColorSecond();
+        return false;
+      }
+    }
+  }
+  updateTileColorSecond();
+  document.addEventListener("keydown", function (event) {
+    if (event.keyCode === 116) {
+      localStorage.setItem("pageReloaded", true);
+      let firstPage = document.getElementById("first");
+      firstPage.style.display = "none";
+      window.location.reload(true);
+    }
+  });
+  let solvePuzzle = document.getElementById("solve-puzzle");
+  let completed = document.getElementById("completed");
+  completed.style.display = "flex";
+  solvePuzzle.style.display = "none";
+  document.getElementById("man-mountain").style.backgroundColor =
+    "rgb(213 213 213)";
+}
+
+window.addEventListener("load", function () {
+  let pageReloaded = localStorage.getItem("pageReloaded");
+  if (pageReloaded) {
+    let firstPage = document.getElementById("first");
+    let secondPage = document.getElementById("second");
+    secondPage.style.display = "flex";
+    firstPage.style.display = "none";
+    localStorage.removeItem("pageReloaded");
+  }
+});
+
+function listenClicksSecond() {
+  for (let i = 0; i < secondArrayTwoD.length; i++) {
+    for (let j = 0; j < secondArrayTwoD.length; j++)
+      secondArrayTwoD[i][j].addEventListener("click", (e) => {
+        const id = e.target.innerHTML;
+        moveTileSecond(id);
+      });
+  }
+}
+
+let thirdArray = game.slice(18, 27);
+let thirdArrayTwoD = [];
+for (let i = 0; i < thirdArray.length; i += chunk) {
+  thirdArrayTwoD.push(thirdArray.slice(i, i + chunk));
+}
+let emptyThird = document.getElementById("empty-third");
+resetThird(thirdArrayTwoD);
+let compareArrayThird = game.slice(18, 27);
+let compareArrayTwoDimensionalThird = [];
+for (let i = 0; i < compareArrayThird.length; i += chunk) {
+  compareArrayTwoDimensionalThird.push(compareArrayThird.slice(i, i + chunk));
+}
+
+const directionsThird = [
+  [-1, 0],
+  [0, -1],
+  [1, 0],
+  [0, 1],
+];
+function getEmptyThird(i, j) {
+  for (let x = 0; x < directionsThird.length; x++) {
+    const newI = i + directionsThird[x][0];
+    const newJ = j + directionsThird[x][1];
+    if (
+      newI >= 0 &&
+      newI < thirdArrayTwoD.length &&
+      newJ >= 0 &&
+      newJ < thirdArrayTwoD.length &&
+      thirdArrayTwoD[newI][newJ] === emptyThird
+    ) {
+      return [newI, newJ];
+    }
+  }
+  return [-1, -1];
+}
+function findElThird(id) {
+  for (let i = 0; i < thirdArrayTwoD.length; i++) {
+    for (let j = 0; j < thirdArrayTwoD.length; j++) {
+      if (thirdArrayTwoD[i][j].innerHTML === id) return [i, j];
+    }
+  }
+}
+function moveTileThird(id) {
+  let [i, j] = findElThird(id);
+  if (thirdArrayTwoD[i][j] === emptyThird) {
+    return null;
+  }
+  let [emptyI, emptyJ] = getEmptyThird(i, j);
+  if (emptyI === -1) {
+    return null;
+  }
+  swapThird(i, j, emptyI, emptyJ);
+  transformThird(thirdArrayTwoD[emptyI][emptyJ], emptyJ * 155, emptyI * 155);
+  transformThird(thirdArrayTwoD[i][j], j * 155, i * 155);
+}
+
+function swapThird(i, j, newI, newJ) {
+  let temp = thirdArrayTwoD[newI][newJ];
+  thirdArrayTwoD[newI][newJ] = thirdArrayTwoD[i][j];
+  thirdArrayTwoD[i][j] = temp;
+  youWonThird();
+}
+
+function transformThird(el, x, y) {
+  el.style.transform = `translate(${x}px, ${y}px)`;
+  el.style.transition = "transform 0.5s";
+}
+
+function resetThird(arr) {
+  let counter = 0;
+  for (let i = 0; i < chunk; i++) {
+    for (let j = 0; j < chunk; j++) {
+      arr[i][j].style.top = "-15px";
+      arr[i][j].style.left = "0px";
+      transformThird(arr[i][j], j * 155, i * 155);
+      arr[i][j].innerHTML = counter++;
+    }
+  }
+}
+
+function startGameThird() {
+  threeSpan.addEventListener("click", function () {
+    shuffleCount = 3;
+  });
+
+  thirtySpan.addEventListener("click", function () {
+    shuffleCount = 30;
+  });
+
+  start.addEventListener("click", function () {
+    if (shuffleCount === 3) {
+      shuffleThreeThird();
+      listenClicksThird();
+      shuffleDiv.style.display = "none";
+      let solvePuzzle = document.getElementById("solve-puzzle");
+      solvePuzzle.style.display = "flex";
+    } else if (shuffleCount === 30) {
+      shuffleThirtyThird();
+      listenClicksThird();
+      shuffleDiv.style.display = "none";
+      let solvePuzzle = document.getElementById("solve-puzzle");
+      solvePuzzle.style.display = "flex";
+    }
+  });
+}
+startGameThird();
+
+let usedTilesThird = new Set();
+function shuffleThreeThird() {
+  let emptyI, emptyJ;
+  for (let i = 0; i < thirdArrayTwoD.length; i++) {
+    for (let j = 0; j < thirdArrayTwoD[i].length; j++) {
+      if (thirdArrayTwoD[i][j] === emptyThird) {
+        emptyI = i;
+        emptyJ = j;
+        break;
+      }
+    }
+  }
+  usedTilesThird.clear();
+  let swaps = 0;
+  let intervalId = setInterval(function () {
+    let randomDirection = directions[Math.floor(Math.random() * 4)];
+    let newI = emptyI + randomDirection[0];
+    let newJ = emptyJ + randomDirection[1];
+    if (
+      newI >= 0 &&
+      newI < thirdArrayTwoD.length &&
+      newJ >= 0 &&
+      newJ < thirdArrayTwoD[newI].length
+    ) {
+      let randomTile = thirdArrayTwoD[newI][newJ];
+      if (!usedTilesThird.has(randomTile)) {
+        swapThird(emptyI, emptyJ, newI, newJ);
+        transformThird(randomTile, emptyJ * 155, emptyI * 155);
+        emptyI = newI;
+        emptyJ = newJ;
+        usedTilesThird.add(randomTile);
+        swaps++;
+      }
+    }
+    if (swaps === 3) {
+      clearInterval(intervalId);
+    }
+  }, 500);
+}
+let lastSwappedTileThird;
+function shuffleThirtyThird() {
+  let emptyI, emptyJ;
+  for (let i = 0; i < thirdArrayTwoD.length; i++) {
+    for (let j = 0; j < thirdArrayTwoD[i].length; j++) {
+      if (thirdArrayTwoD[i][j] === emptyThird) {
+        emptyI = i;
+        emptyJ = j;
+        break;
+      }
+    }
+  }
+  usedTilesThird.clear();
+  let swaps = 0;
+  let intervalId = setInterval(function () {
+    let randomDirection = directions[Math.floor(Math.random() * 4)];
+    let newI = emptyI + randomDirection[0];
+    let newJ = emptyJ + randomDirection[1];
+    if (
+      newI >= 0 &&
+      newI < thirdArrayTwoD.length &&
+      newJ >= 0 &&
+      newJ < thirdArrayTwoD[newI].length
+    ) {
+      let randomTile = thirdArrayTwoD[newI][newJ];
+      if (randomTile !== lastSwappedTileThird) {
+        swapThird(emptyI, emptyJ, newI, newJ);
+        transformThird(randomTile, emptyJ * 155, emptyI * 155);
+        emptyI = newI;
+        emptyJ = newJ;
+        usedTilesThird.clear();
+        usedTilesThird.add(randomTile);
+        lastSwappedTileThird = randomTile;
+        swaps++;
+      }
+    }
+    if (swaps === 30) {
+      clearInterval(intervalId);
+    }
+  }, 200);
+}
+
+function updateTileColorThird() {
+  const tiles = document.querySelectorAll("#cube li");
+  for (let i = 0; i < tiles.length; i++) {
+    const tile = tiles[i];
+    const row = Math.floor(i / 3);
+    const col = i % 3;
+    if (
+      thirdArrayTwoD[row][col] === compareArrayTwoDimensionalThird[row][col]
+    ) {
+      tile.style.borderColor = "green";
+    } else {
+      tile.style.borderColor = "red";
+    }
+  }
+}
+
+function youWonThird() {
+  if (thirdArrayTwoD.length !== compareArrayTwoDimensionalThird.length) {
+    return false;
+  }
+  for (let i = 0; i < thirdArrayTwoD.length; i++) {
+    for (let j = 0; j < thirdArrayTwoD[i].length; j++) {
+      if (thirdArrayTwoD[i][j] !== compareArrayTwoDimensionalThird[i][j]) {
+        updateTileColorThird();
+        return false;
+      }
+    }
+  }
+  updateTileColorThird();
+  document.addEventListener("keydown", function (event) {
+    if (event.keyCode === 116) {
+      localStorage.setItem("pageReloaded", true);
+      let firstPage = document.getElementById("first");
+      firstPage.style.display = "none";
+      window.location.reload(true);
+    }
+  });
+  let solvePuzzle = document.getElementById("solve-puzzle");
+  let completed = document.getElementById("completed");
+  completed.style.display = "flex";
+  solvePuzzle.style.display = "none";
+  document.getElementById("cube").style.backgroundColor = "rgb(213 213 213)";
+}
+
+window.addEventListener("load", function () {
+  let pageReloaded = localStorage.getItem("pageReloaded");
+  if (pageReloaded) {
+    let firstPage = document.getElementById("first");
+    let secondPage = document.getElementById("second");
+    secondPage.style.display = "flex";
+    firstPage.style.display = "none";
+    localStorage.removeItem("pageReloaded");
+  }
+});
+
+function listenClicksThird() {
+  for (let i = 0; i < thirdArrayTwoD.length; i++) {
+    for (let j = 0; j < thirdArrayTwoD.length; j++)
+      thirdArrayTwoD[i][j].addEventListener("click", (e) => {
+        const id = e.target.innerHTML;
+        moveTileThird(id);
       });
   }
 }

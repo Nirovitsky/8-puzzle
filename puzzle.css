@@ -124,6 +124,9 @@ li {
   flex-direction: column;
   margin-top: 45px;
 }
+#third li {
+  color: transparent;
+}
 #giraffe-img li {
   list-style-type: none;
   height: 154px;
