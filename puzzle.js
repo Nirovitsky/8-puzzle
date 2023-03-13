@@ -290,16 +290,20 @@ function startGame() {
   start.addEventListener("click", function () {
     if (shuffleCount === 3) {
       shuffleThree();
-      listenClicks();
       shuffleDiv.style.display = "none";
       let solvePuzzle = document.getElementById("solve-puzzle");
-      solvePuzzle.style.display = "flex";
+      setTimeout(() => {
+        listenClicks();
+        solvePuzzle.style.display = "flex";
+      }, 1500);
     } else if (shuffleCount === 30) {
       shuffleThirty();
-      listenClicks();
       shuffleDiv.style.display = "none";
       let solvePuzzle = document.getElementById("solve-puzzle");
-      solvePuzzle.style.display = "flex";
+      setTimeout(() => {
+        listenClicks();
+        solvePuzzle.style.display = "flex";
+      }, 7200);
     }
   });
 }
@@ -319,7 +323,9 @@ function shuffleThree() {
   }
   usedTiles.clear();
   let swaps = 0;
-  let intervalId = setInterval(function () {
+  let lastSwapTime = 0;
+
+  function loop(timestamp) {
     let randomDirection = directions[Math.floor(Math.random() * 4)];
     let newI = emptyI + randomDirection[0];
     let newJ = emptyJ + randomDirection[1];
@@ -331,19 +337,26 @@ function shuffleThree() {
     ) {
       let randomTile = firstArrayTwoD[newI][newJ];
       if (!usedTiles.has(randomTile)) {
-        swap(emptyI, emptyJ, newI, newJ);
-        transform(randomTile, emptyJ * 155, emptyI * 155);
-        emptyI = newI;
-        emptyJ = newJ;
-        usedTiles.add(randomTile);
-        swaps++;
+        let currentTime = performance.now();
+        if (currentTime - lastSwapTime > 500) {
+          swap(emptyI, emptyJ, newI, newJ);
+          transform(randomTile, emptyJ * 155, emptyI * 155);
+          emptyI = newI;
+          emptyJ = newJ;
+          usedTiles.add(randomTile);
+          swaps++;
+          lastSwapTime = currentTime;
+        }
       }
     }
-    if (swaps === 3) {
-      clearInterval(intervalId);
+    if (swaps < 3) {
+      window.requestAnimationFrame(loop);
     }
-  }, 500);
+  }
+
+  loop(performance.now());
 }
+
 let lastSwappedTile;
 function shuffleThirty() {
   let emptyI, emptyJ;
@@ -358,7 +371,9 @@ function shuffleThirty() {
   }
   usedTiles.clear();
   let swaps = 0;
-  let intervalId = setInterval(function () {
+  let lastSwapTime = 0;
+
+  function loop(timestamp) {
     let randomDirection = directions[Math.floor(Math.random() * 4)];
     let newI = emptyI + randomDirection[0];
     let newJ = emptyJ + randomDirection[1];
@@ -370,20 +385,32 @@ function shuffleThirty() {
     ) {
       let randomTile = firstArrayTwoD[newI][newJ];
       if (randomTile !== lastSwappedTile) {
-        swap(emptyI, emptyJ, newI, newJ);
-        transform(randomTile, emptyJ * 155, emptyI * 155);
-        emptyI = newI;
-        emptyJ = newJ;
-        usedTiles.clear();
-        usedTiles.add(randomTile);
-        lastSwappedTile = randomTile;
-        swaps++;
+        let currentTime = performance.now();
+        if (currentTime - lastSwapTime > 200) {
+          swap(emptyI, emptyJ, newI, newJ);
+          transform(randomTile, emptyJ * 155, emptyI * 155);
+          emptyI = newI;
+          emptyJ = newJ;
+          usedTiles.clear();
+          usedTiles.add(randomTile);
+          lastSwappedTile = randomTile;
+          swaps++;
+          lastSwapTime = currentTime;
+        }
       }
     }
+    if (swaps < 30) {
+      window.requestAnimationFrame(loop);
+    }
+  }
+
+  let intervalId = window.setInterval(function () {
     if (swaps === 30) {
       clearInterval(intervalId);
     }
-  }, 200);
+  }, 500);
+
+  loop(performance.now());
 }
 
 function updateTileColors() {
@@ -542,16 +569,20 @@ function startGameSecond() {
   start.addEventListener("click", function () {
     if (shuffleCount === 3) {
       shuffleThreeSecond();
-      listenClicksSecond();
       shuffleDiv.style.display = "none";
       let solvePuzzle = document.getElementById("solve-puzzle");
-      solvePuzzle.style.display = "flex";
+      setTimeout(() => {
+        listenClicksSecond();
+        solvePuzzle.style.display = "flex";
+      }, 1500);
     } else if (shuffleCount === 30) {
       shuffleThirtySecond();
-      listenClicksSecond();
       shuffleDiv.style.display = "none";
       let solvePuzzle = document.getElementById("solve-puzzle");
-      solvePuzzle.style.display = "flex";
+      setTimeout(() => {
+        listenClicksSecond();
+        solvePuzzle.style.display = "flex";
+      }, 7200);
     }
   });
 }
@@ -571,7 +602,9 @@ function shuffleThreeSecond() {
   }
   usedTilesSecond.clear();
   let swaps = 0;
-  let intervalId = setInterval(function () {
+  let lastSwapTime = 0;
+
+  function loop(timestamp) {
     let randomDirection = directions[Math.floor(Math.random() * 4)];
     let newI = emptyI + randomDirection[0];
     let newJ = emptyJ + randomDirection[1];
@@ -583,19 +616,26 @@ function shuffleThreeSecond() {
     ) {
       let randomTile = secondArrayTwoD[newI][newJ];
       if (!usedTilesSecond.has(randomTile)) {
-        swapSecond(emptyI, emptyJ, newI, newJ);
-        transformSecond(randomTile, emptyJ * 155, emptyI * 155);
-        emptyI = newI;
-        emptyJ = newJ;
-        usedTilesSecond.add(randomTile);
-        swaps++;
+        let currentTime = performance.now();
+        if (currentTime - lastSwapTime > 500) {
+          swapSecond(emptyI, emptyJ, newI, newJ);
+          transformSecond(randomTile, emptyJ * 155, emptyI * 155);
+          emptyI = newI;
+          emptyJ = newJ;
+          usedTilesSecond.add(randomTile);
+          swaps++;
+          lastSwapTime = currentTime;
+        }
       }
     }
-    if (swaps === 3) {
-      clearInterval(intervalId);
+    if (swaps < 3) {
+      window.requestAnimationFrame(loop);
     }
-  }, 500);
+  }
+
+  loop(performance.now());
 }
+
 let lastSwappedTileSecond;
 function shuffleThirtySecond() {
   let emptyI, emptyJ;
@@ -610,7 +650,9 @@ function shuffleThirtySecond() {
   }
   usedTilesSecond.clear();
   let swaps = 0;
-  let intervalId = setInterval(function () {
+  let lastSwapTime = 0;
+
+  function loop(timestamp) {
     let randomDirection = directions[Math.floor(Math.random() * 4)];
     let newI = emptyI + randomDirection[0];
     let newJ = emptyJ + randomDirection[1];
@@ -622,20 +664,32 @@ function shuffleThirtySecond() {
     ) {
       let randomTile = secondArrayTwoD[newI][newJ];
       if (randomTile !== lastSwappedTileSecond) {
-        swapSecond(emptyI, emptyJ, newI, newJ);
-        transformSecond(randomTile, emptyJ * 155, emptyI * 155);
-        emptyI = newI;
-        emptyJ = newJ;
-        usedTilesSecond.clear();
-        usedTilesSecond.add(randomTile);
-        lastSwappedTileSecond = randomTile;
-        swaps++;
+        let currentTime = performance.now();
+        if (currentTime - lastSwapTime > 200) {
+          swapSecond(emptyI, emptyJ, newI, newJ);
+          transformSecond(randomTile, emptyJ * 155, emptyI * 155);
+          emptyI = newI;
+          emptyJ = newJ;
+          usedTilesSecond.clear();
+          usedTilesSecond.add(randomTile);
+          lastSwappedTileSecond = randomTile;
+          swaps++;
+          lastSwapTime = currentTime;
+        }
       }
     }
+    if (swaps < 30) {
+      window.requestAnimationFrame(loop);
+    }
+  }
+
+  let intervalId = window.setInterval(function () {
     if (swaps === 30) {
       clearInterval(intervalId);
     }
-  }, 200);
+  }, 500);
+
+  loop(performance.now());
 }
 
 function updateTileColorSecond() {
@@ -796,16 +850,20 @@ function startGameThird() {
   start.addEventListener("click", function () {
     if (shuffleCount === 3) {
       shuffleThreeThird();
-      listenClicksThird();
       shuffleDiv.style.display = "none";
       let solvePuzzle = document.getElementById("solve-puzzle");
-      solvePuzzle.style.display = "flex";
+      setTimeout(() => {
+        listenClicksThird();
+        solvePuzzle.style.display = "flex";
+      }, 1500);
     } else if (shuffleCount === 30) {
       shuffleThirtyThird();
-      listenClicksThird();
       shuffleDiv.style.display = "none";
       let solvePuzzle = document.getElementById("solve-puzzle");
-      solvePuzzle.style.display = "flex";
+      setTimeout(() => {
+        listenClicksThird();
+        solvePuzzle.style.display = "flex";
+      }, 7200);
     }
   });
 }
@@ -825,7 +883,9 @@ function shuffleThreeThird() {
   }
   usedTilesThird.clear();
   let swaps = 0;
-  let intervalId = setInterval(function () {
+  let lastSwapTime = 0;
+
+  function loop(timestamp) {
     let randomDirection = directions[Math.floor(Math.random() * 4)];
     let newI = emptyI + randomDirection[0];
     let newJ = emptyJ + randomDirection[1];
@@ -837,19 +897,26 @@ function shuffleThreeThird() {
     ) {
       let randomTile = thirdArrayTwoD[newI][newJ];
       if (!usedTilesThird.has(randomTile)) {
-        swapThird(emptyI, emptyJ, newI, newJ);
-        transformThird(randomTile, emptyJ * 155, emptyI * 155);
-        emptyI = newI;
-        emptyJ = newJ;
-        usedTilesThird.add(randomTile);
-        swaps++;
+        let currentTime = performance.now();
+        if (currentTime - lastSwapTime > 500) {
+          swapThird(emptyI, emptyJ, newI, newJ);
+          transformThird(randomTile, emptyJ * 155, emptyI * 155);
+          emptyI = newI;
+          emptyJ = newJ;
+          usedTilesThird.add(randomTile);
+          swaps++;
+          lastSwapTime = currentTime;
+        }
       }
     }
-    if (swaps === 3) {
-      clearInterval(intervalId);
+    if (swaps < 3) {
+      window.requestAnimationFrame(loop);
     }
-  }, 500);
+  }
+
+  loop(performance.now());
 }
+
 let lastSwappedTileThird;
 function shuffleThirtyThird() {
   let emptyI, emptyJ;
@@ -864,7 +931,9 @@ function shuffleThirtyThird() {
   }
   usedTilesThird.clear();
   let swaps = 0;
-  let intervalId = setInterval(function () {
+  let lastSwapTime = 0;
+
+  function loop(timestamp) {
     let randomDirection = directions[Math.floor(Math.random() * 4)];
     let newI = emptyI + randomDirection[0];
     let newJ = emptyJ + randomDirection[1];
@@ -876,20 +945,32 @@ function shuffleThirtyThird() {
     ) {
       let randomTile = thirdArrayTwoD[newI][newJ];
       if (randomTile !== lastSwappedTileThird) {
-        swapThird(emptyI, emptyJ, newI, newJ);
-        transformThird(randomTile, emptyJ * 155, emptyI * 155);
-        emptyI = newI;
-        emptyJ = newJ;
-        usedTilesThird.clear();
-        usedTilesThird.add(randomTile);
-        lastSwappedTileThird = randomTile;
-        swaps++;
+        let currentTime = performance.now();
+        if (currentTime - lastSwapTime > 200) {
+          swapThird(emptyI, emptyJ, newI, newJ);
+          transformThird(randomTile, emptyJ * 155, emptyI * 155);
+          emptyI = newI;
+          emptyJ = newJ;
+          usedTilesThird.clear();
+          usedTilesThird.add(randomTile);
+          lastSwappedTileThird = randomTile;
+          swaps++;
+          lastSwapTime = currentTime;
+        }
       }
     }
+    if (swaps < 30) {
+      window.requestAnimationFrame(loop);
+    }
+  }
+
+  let intervalId = window.setInterval(function () {
     if (swaps === 30) {
       clearInterval(intervalId);
     }
-  }, 200);
+  }, 500);
+
+  loop(performance.now());
 }
 
 function updateTileColorThird() {
