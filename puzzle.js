@@ -303,7 +303,7 @@ function startGame() {
       setTimeout(() => {
         listenClicks();
         solvePuzzle.style.display = "flex";
-      }, 7200);
+      }, 7100);
     }
   });
 }
@@ -448,6 +448,7 @@ function youWon() {
       window.location.reload(true);
     }
   });
+  disableClicks();
   let solvePuzzle = document.getElementById("solve-puzzle");
   let completed = document.getElementById("completed");
   completed.style.display = "flex";
@@ -466,6 +467,15 @@ window.addEventListener("load", function () {
     localStorage.removeItem("pageReloaded");
   }
 });
+
+function disableClicks() {
+  for (let i = 0; i < firstArrayTwoD.length; i++) {
+    for (let j = 0; j < firstArrayTwoD.length; j++) {
+      const el = firstArrayTwoD[i][j];
+      el.style.pointerEvents = "none";
+    }
+  }
+}
 
 function listenClicks() {
   for (let i = 0; i < firstArrayTwoD.length; i++) {
@@ -582,7 +592,7 @@ function startGameSecond() {
       setTimeout(() => {
         listenClicksSecond();
         solvePuzzle.style.display = "flex";
-      }, 7200);
+      }, 7100);
     }
   });
 }
@@ -729,6 +739,7 @@ function youWonSecond() {
       window.location.reload(true);
     }
   });
+  disableClicksSecond();
   let solvePuzzle = document.getElementById("solve-puzzle");
   let completed = document.getElementById("completed");
   completed.style.display = "flex";
@@ -747,6 +758,15 @@ window.addEventListener("load", function () {
     localStorage.removeItem("pageReloaded");
   }
 });
+
+function disableClicksSecond() {
+  for (let i = 0; i < secondArrayTwoD.length; i++) {
+    for (let j = 0; j < secondArrayTwoD.length; j++) {
+      const el = secondArrayTwoD[i][j];
+      el.style.pointerEvents = "none";
+    }
+  }
+}
 
 function listenClicksSecond() {
   for (let i = 0; i < secondArrayTwoD.length; i++) {
@@ -863,7 +883,7 @@ function startGameThird() {
       setTimeout(() => {
         listenClicksThird();
         solvePuzzle.style.display = "flex";
-      }, 7200);
+      }, 7100);
     }
   });
 }
@@ -1010,6 +1030,7 @@ function youWonThird() {
       window.location.reload(true);
     }
   });
+  disableClicksThird();
   let solvePuzzle = document.getElementById("solve-puzzle");
   let completed = document.getElementById("completed");
   completed.style.display = "flex";
@@ -1027,6 +1048,15 @@ window.addEventListener("load", function () {
     localStorage.removeItem("pageReloaded");
   }
 });
+
+function disableClicksThird() {
+  for (let i = 0; i < thirdArrayTwoD.length; i++) {
+    for (let j = 0; j < thirdArrayTwoD.length; j++) {
+      const el = thirdArrayTwoD[i][j];
+      el.style.pointerEvents = "none";
+    }
+  }
+}
 
 function listenClicksThird() {
   for (let i = 0; i < thirdArrayTwoD.length; i++) {

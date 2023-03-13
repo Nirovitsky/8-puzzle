@@ -427,3 +427,16 @@ li {
     opacity: 1;
   }
 }
+
+@media screen and (max-width: 550px) {
+  h1 {
+    font-size: 35px;
+  }
+  .contents {
+    height: 210px;
+    width: 95%;
+  }
+  .images img {
+    width: 115px;
+  }
+}
